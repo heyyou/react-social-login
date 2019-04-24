@@ -50,7 +50,8 @@ const SocialLogin = (WrappedComponent) => class SocialLogin extends Component {
     this.state = {
       isLoaded: false,
       isConnected: false,
-      isFetching: false
+      isFetching: false,
+      isLoginQueued: false
     }
 
     // Load required SDK
@@ -102,6 +103,12 @@ const SocialLogin = (WrappedComponent) => class SocialLogin extends Component {
 
         return null
       }, this.onLoginFailure)
+      .then(() => {
+        if (this.state.isLoginQueued) {
+          this.login()
+          this.setState({ isLoginQueued: false })
+        }
+      })
   }
 
   componentWillReceiveProps (nextProps) {
@@ -152,7 +159,8 @@ const SocialLogin = (WrappedComponent) => class SocialLogin extends Component {
     } else if (this.state.isLoaded && this.state.isFetching) {
       this.props.onLoginFailure('Fetching user')
     } else if (!this.state.isLoaded) {
-      this.props.onLoginFailure('SDK not loaded')
+      console.log('login queued')
+      this.setState({ isLoginQueued: true })
     } else {
       this.props.onLoginFailure('Unknown error')
     }
@@ -292,7 +300,12 @@ const SocialLogin = (WrappedComponent) => class SocialLogin extends Component {
     }
 
     return (
-      <WrappedComponent triggerLogin={this.login} {...additionnalProps} {...originalProps} />
+      <WrappedComponent
+        triggerLogin={this.login}
+        isLoginQueued={this.state.isLoginQueued}
+        {...additionnalProps}
+        {...originalProps}
+      />
     )
   }
 }
