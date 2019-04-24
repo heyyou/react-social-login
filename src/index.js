@@ -159,7 +159,6 @@ const SocialLogin = (WrappedComponent) => class SocialLogin extends Component {
     } else if (this.state.isLoaded && this.state.isFetching) {
       this.props.onLoginFailure('Fetching user')
     } else if (!this.state.isLoaded) {
-      console.log('login queued')
       this.setState({ isLoginQueued: true })
     } else {
       this.props.onLoginFailure('Unknown error')
