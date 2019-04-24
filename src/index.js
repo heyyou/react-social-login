@@ -298,10 +298,15 @@ const SocialLogin = (WrappedComponent) => class SocialLogin extends Component {
       }
     }
 
+    const stateProps = {
+      isLoginQueued: this.state.isLoginQueued,
+      isLoginOngoing: this.state.isFetching
+    }
+
     return (
       <WrappedComponent
         triggerLogin={this.login}
-        isLoginQueued={this.state.isLoginQueued}
+        {...stateProps}
         {...additionnalProps}
         {...originalProps}
       />
